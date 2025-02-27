@@ -1,8 +1,6 @@
--- Criando o banco de dados
 CREATE DATABASE ExpansaoVarejo;
 USE ExpansaoVarejo;
 
--- Tabela de Perfil Sociodemográfico da População
 CREATE TABLE Perfil_Sociodemografico (
     id INT AUTO_INCREMENT PRIMARY KEY,
     regiao VARCHAR(100),
@@ -13,7 +11,6 @@ CREATE TABLE Perfil_Sociodemografico (
     densidade_populacional DECIMAL(10,2)
 );
 
--- Tabela de Concorrência
 CREATE TABLE Concorrencia (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome_loja VARCHAR(100),
@@ -24,7 +21,6 @@ CREATE TABLE Concorrencia (
     faturamento_estimado DECIMAL(15,2)
 );
 
--- Tabela de Desempenho das Lojas Atuais
 CREATE TABLE Desempenho_Lojas (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome_loja VARCHAR(100),
@@ -37,7 +33,6 @@ CREATE TABLE Desempenho_Lojas (
     custo_operacional DECIMAL(15,2)
 );
 
--- Tabela para armazenar sugestões de expansão
 CREATE TABLE Expansao_Sugerida (
     id INT AUTO_INCREMENT PRIMARY KEY,
     regiao VARCHAR(100),
@@ -47,25 +42,21 @@ CREATE TABLE Expansao_Sugerida (
     viabilidade DECIMAL(5,2) -- Indicador de viabilidade baseado em análise preditiva
 );
 
--- Inserindo dados fictícios na tabela Perfil Sociodemográfico
 INSERT INTO Perfil_Sociodemografico (regiao, populacao_total, renda_media, idade_media, taxa_crescimento, densidade_populacional) VALUES
 ('Centro', 50000, 4500.00, 35.5, 1.2, 3000.00),
 ('Zona Norte', 70000, 3200.00, 37.2, 0.9, 2500.00),
 ('Zona Sul', 60000, 5000.00, 33.8, 1.5, 2800.00);
 
--- Inserindo dados fictícios na tabela Concorrência
 INSERT INTO Concorrencia (nome_loja, categoria, endereco, latitude, longitude, faturamento_estimado) VALUES
 ('Supermercado A', 'Supermercado', 'Rua das Flores, 123', -23.550520, -46.633308, 150000.00),
 ('Loja B', 'Vestuário', 'Avenida Central, 456', -23.551000, -46.632000, 80000.00),
 ('Padaria C', 'Alimentação', 'Rua da Paz, 789', -23.552000, -46.631000, 50000.00);
 
--- Inserindo dados fictícios na tabela Desempenho das Lojas Atuais
 INSERT INTO Desempenho_Lojas (nome_loja, endereco, latitude, longitude, faturamento_mensal, ticket_medio, fluxo_clientes, custo_operacional) VALUES
 ('Loja 1', 'Rua A, 100', -23.550000, -46.630000, 200000.00, 50.00, 4000, 80000.00),
 ('Loja 2', 'Avenida B, 200', -23.551500, -46.629500, 180000.00, 45.00, 3800, 75000.00),
 ('Loja 3', 'Praça C, 300', -23.552500, -46.628500, 220000.00, 55.00, 4200, 85000.00);
 
--- Inserindo dados fictícios na tabela Expansao Sugerida
 INSERT INTO Expansao_Sugerida (regiao, potencial_clientes, concorrentes_proximos, estimativa_faturamento, viabilidade) VALUES
 ('Zona Oeste', 60000, 3, 180000.00, 8.5),
 ('Centro Expandido', 75000, 5, 220000.00, 9.0);
