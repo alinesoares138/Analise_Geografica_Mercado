@@ -133,6 +133,7 @@ SELECT regiao, indice_atratividade,
 FROM ranked
 ORDER BY indice_atratividade DESC;
 
+
 -- Elasticidade da Demanda x Faturamento
 SELECT FORMAT((SUM((Perfil_Sociodemografico.renda_media - (SELECT AVG(renda_media) FROM Perfil_Sociodemografico)) * 
          (Desempenho_Lojas.faturamento_mensal - (SELECT AVG(faturamento_mensal) FROM Desempenho_Lojas))) ) / 
@@ -140,8 +141,3 @@ SELECT FORMAT((SUM((Perfil_Sociodemografico.renda_media - (SELECT AVG(renda_medi
           SUM(POW(Desempenho_Lojas.faturamento_mensal - (SELECT AVG(faturamento_mensal) FROM Desempenho_Lojas), 2)))),2) AS correlacao
 FROM Perfil_Sociodemografico
 JOIN Desempenho_Lojas ON Perfil_Sociodemografico.regiao = Desempenho_Lojas.regiao;
-
-
-
-
-
