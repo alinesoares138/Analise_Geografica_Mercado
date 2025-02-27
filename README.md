@@ -57,9 +57,16 @@ Tarefa:
 ```
 
 ### 📌 **Resumo da Análise**  
-- O **Centro** tem **Alto Potencial** de expansão, apesar da concorrência.  
-- A **Zona Sul** apresenta **Médio Potencial**, com renda média mais alta.  
-- A **Zona Norte** tem **Baixo Potencial**, possivelmente devido à menor renda média.  
-- A **correlação negativa** entre **renda média e faturamento médio (-0.97)** sugere que regiões com renda mais alta não necessariamente têm faturamento mais alto, o que pode indicar outros fatores influenciando as vendas.  
+Recomendação para expansão: Zona Norte e Sul
+* A recomendação de priorizar a Zona Norte para expansão se baseia em
+ uma análise detalhada de dados socioeconômicos, desempenho de
+ concorrência e faturamento das lojas. A região apresenta um índice de
+ atratividade elevado, com baixa concorrência e um bom potencial de
+ lucratividade, indicando que é o ambiente mais promissor para
+ expansão imediata. Além disso, o faturamento médio das lojas na Zona
+ Norte reforça a viabilidade financeira dessa estratégia.
+* A Zona Sul, embora tenha uma renda média mais alta, apresenta um
+ faturamento médio menor, o que exige uma estratégia mais cuidadosa
+ e diferenciada, mas ainda assim é uma região com grande potencial.
 
 🚀 **Próximos Passos:** Refinar os clusters e considerar novas métricas para priorizar a expansão.  
