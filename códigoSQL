@@ -87,10 +87,8 @@ UPDATE Concorrencia SET regiao = 'Centro' WHERE nome_loja = 'Loja 1';
 UPDATE Concorrencia SET regiao = 'Zona Sul' WHERE nome_loja = 'Loja 2';
 UPDATE Concorrencia SET regiao = 'Zona Norte' WHERE nome_loja = 'Loja 3';
 
-# PREPARANDO OS DADOS
-# Calcular métricas por região no SQL: População total e renda média da região; 
-# Número de concorrentes próximos e Faturamento médio das lojas existentes.
-
+# PROCESSAMENTO OS DADOS
+-- Cálculo por região: população total e renda média, número de concorrentes próximos e faturamento médio das lojas existentes.
 SELECT Perfil_Sociodemografico.regiao, 
        FORMAT(AVG(Perfil_Sociodemografico.populacao_total),2) AS populacao_media, 
        FORMAT(AVG(Perfil_Sociodemografico.renda_media),2) AS renda_media,
@@ -101,3 +99,36 @@ LEFT JOIN Concorrencia ON Perfil_Sociodemografico.regiao = Concorrencia.regiao
 LEFT JOIN Desempenho_Lojas ON Perfil_Sociodemografico.regiao = Desempenho_Lojas.regiao
 GROUP BY Perfil_Sociodemografico.regiao
 LIMIT 1000;
+
+| Região      | População Média | Renda Média | Nº Concorrentes | Faturamento Médio |
+| :---        | :---:           | :---:       | :---:           | ---:              |
+| Centro      | 50,000.00       | 4,500.00    | 2.00            | 200,000.00        |
+| Zona Norte  | 70,000.00       | 3,200.00    | 2.00            | 220,000.00        |
+| Zona Sul    | 60,000.00       | 5,000.00    | 2.00            | 180,000.00        |
+
+-- Cálculo de índice de concorrência:
+SELECT Concorrencia.regiao,
+       (COUNT(DISTINCT Concorrencia.id) * 1000) / NULLIF(AVG(Perfil_Sociodemografico.populacao_total), 0) AS indice_concorrencia
+FROM Perfil_Sociodemografico
+LEFT JOIN Concorrencia ON Perfil_Sociodemografico.regiao = Concorrencia.regiao
+GROUP BY Concorrencia.regiao;
+
+| Região      | Índice de Concorrência |
+| :---        | ---:                    |
+| Centro      | 0.0400                   |
+| Zona Norte  | 0.0286                   |
+| Zona Sul    | 0.0333                   |
+
+-- Índice de atratividade é uma combinação ponderada de população (40%), renda média (30%), número de concorrentes (20%) e faturamento das lojas (10%). 
+SELECT Concorrencia.regiao,
+       FORMAT((COUNT(DISTINCT Concorrencia.id) * 100000) / NULLIF(AVG(Perfil_Sociodemografico.populacao_total), 0), 2) AS indice_concorrencia
+FROM Perfil_Sociodemografico
+LEFT JOIN Concorrencia ON Perfil_Sociodemografico.regiao = Concorrencia.regiao
+GROUP BY Concorrencia.regiao;
+
+| Região      | Índice de Atratividade |
+| :---        | ---:                    |
+| Zona Norte  | 50959.6000              |
+| Zona Sul    | 43499.6000              |
+| Centro      | 41349.6000              |
+
