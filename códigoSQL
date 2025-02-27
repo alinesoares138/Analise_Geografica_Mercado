@@ -119,16 +119,47 @@ GROUP BY Concorrencia.regiao;
 | Zona Norte  | 0.0286                   |
 | Zona Sul    | 0.0333                   |
 
--- Índice de atratividade é uma combinação ponderada de população (40%), renda média (30%), número de concorrentes (20%) e faturamento das lojas (10%). 
-SELECT Concorrencia.regiao,
-       FORMAT((COUNT(DISTINCT Concorrencia.id) * 100000) / NULLIF(AVG(Perfil_Sociodemografico.populacao_total), 0), 2) AS indice_concorrencia
-FROM Perfil_Sociodemografico
-LEFT JOIN Concorrencia ON Perfil_Sociodemografico.regiao = Concorrencia.regiao
-GROUP BY Concorrencia.regiao;
+-- Análise de Cluster (Segmentação de Regiões)
+WITH ranked AS (
+    SELECT regiao, indice_atratividade,
+           NTILE(3) OVER (ORDER BY indice_atratividade DESC) AS cluster
+    FROM (
+        SELECT Perfil_Sociodemografico.regiao,
+               (AVG(Perfil_Sociodemografico.populacao_total) * 0.4 
+               + AVG(Perfil_Sociodemografico.renda_media) * 0.3 
+               - COUNT(DISTINCT Concorrencia.id) * 0.2 
+               + AVG(Desempenho_Lojas.faturamento_mensal) * 0.1) AS indice_atratividade
+        FROM Perfil_Sociodemografico
+        LEFT JOIN Concorrencia ON Perfil_Sociodemografico.regiao = Concorrencia.regiao
+        LEFT JOIN Desempenho_Lojas ON Perfil_Sociodemografico.regiao = Desempenho_Lojas.regiao
+        GROUP BY Perfil_Sociodemografico.regiao
+    ) subquery
+)
+SELECT regiao, indice_atratividade, 
+       CASE 
+           WHEN cluster = 1 THEN 'Baixo Potencial'
+           WHEN cluster = 2 THEN 'Médio Potencial'
+           ELSE 'Alto Potencial'
+       END AS categoria_cluster
+FROM ranked
+ORDER BY indice_atratividade DESC;
 
-| Região      | Índice de Atratividade |
-| :---        | ---:                    |
-| Zona Norte  | 50959.6000              |
-| Zona Sul    | 43499.6000              |
-| Centro      | 41349.6000              |
+| Região      | Índice de Atratividade | Categoria        |
+|------------|----------------------|-----------------|
+| Zona Norte | 50,959.6000000       | Baixo Potencial |
+| Zona Sul   | 43,499.6000000       | Médio Potencial |
+| Centro     | 41,349.6000000       | Alto Potencial  |
+
+-- Elasticidade da Demanda x Faturamento
+SELECT FORMAT((SUM((Perfil_Sociodemografico.renda_media - (SELECT AVG(renda_media) FROM Perfil_Sociodemografico)) * 
+         (Desempenho_Lojas.faturamento_mensal - (SELECT AVG(faturamento_mensal) FROM Desempenho_Lojas))) ) / 
+    (SQRT(SUM(POW(Perfil_Sociodemografico.renda_media - (SELECT AVG(renda_media) FROM Perfil_Sociodemografico), 2)) * 
+          SUM(POW(Desempenho_Lojas.faturamento_mensal - (SELECT AVG(faturamento_mensal) FROM Desempenho_Lojas), 2)))),2) AS correlacao
+FROM Perfil_Sociodemografico
+JOIN Desempenho_Lojas ON Perfil_Sociodemografico.regiao = Desempenho_Lojas.regiao;
+
+| Métrica     | Valor  |
+|------------|--------|
+| Correlação | -0.97  |
+
 
