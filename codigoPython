@@ -1,0 +1,61 @@
+# Comparando o índice de atratividade e a categoria de potencial (Alto, Médio, Baixo) por região.
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# Carregar os dados do Excel
+df = pd.read_excel('/analise_expansao_regioes.xlsx')
+
+# Configurar o estilo do gráfico
+sns.set(style="whitegrid")
+
+# Criar o gráfico de barras com paleta de cores em tons de azul
+plt.figure(figsize=(6, 4))
+bar_plot = sns.barplot(x="Região", y="Índice de Atratividade", hue="Categoria de Potencial", data=df, palette="Blues")
+
+# Adicionar título em negrito e rótulos aos eixos
+plt.title("Comparação do Índice de Atratividade e Categoria de Potencial por Região", fontsize=10, fontweight='bold')
+plt.xlabel("", fontsize=10)  # Remover o título 'Região'
+plt.ylabel("Índice de Atratividade", fontsize=10)
+
+# Ajustar a legenda: posicionado à direita e com fonte 10
+plt.legend(title="Categoria de Potencial", fontsize=10, title_fontsize=10, loc='upper left', bbox_to_anchor=(1.05, 1))
+
+# Ajustar o layout para não cortar a legenda
+plt.tight_layout()
+
+# Mostrar o gráfico
+plt.show()
+
+#Visualizando a distribuição de renda média e número de concorrentes por região, destacando as áreas com maior oportunidade de expansão
+# Criar o gráfico para a distribuição de renda média
+plt.figure(figsize=(6, 4))
+sns.barplot(x="Região", y="Renda Média", data=df, hue="Região", palette="Blues")
+
+# Adicionar título em negrito e rótulos aos eixos
+plt.title("Distribuição da Renda Média por Região", fontsize=10, fontweight='bold')
+plt.xlabel("", fontsize=10)  # Remover o título do eixo X
+plt.ylabel("Renda Média", fontsize=10)
+
+# Ajustar o layout para não cortar a legenda
+plt.tight_layout()
+
+# Mostrar o gráfico
+plt.show()
+
+# Mostrando a relação entre renda média e faturamento das lojas, evidenciando as regiões com maior discrepância ou correlação entre esses dois fatores
+# Criar o gráfico de dispersão
+plt.figure(figsize=(8, 6))
+sns.scatterplot(x="Renda Média", y="Faturamento Médio", data=df, hue="Região", palette="Blues", s=100)
+
+# Adicionar título, rótulos aos eixos e personalização da legenda
+plt.title("Relação entre Renda Média e Faturamento Médio das Lojas por Região", fontsize=10, fontweight='bold')
+plt.xlabel("Renda Média", fontsize=10)
+plt.ylabel("Faturamento Médio", fontsize=10)
+
+# Ajustar o layout para não cortar a legenda
+plt.tight_layout()
+
+# Mostrar o gráfico
+plt.show()
+
